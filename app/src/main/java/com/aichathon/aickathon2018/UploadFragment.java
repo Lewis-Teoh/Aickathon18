@@ -1,6 +1,7 @@
 package com.aichathon.aickathon2018;
 
 
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
@@ -17,8 +18,10 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.ListView;
+import android.widget.ProgressBar;
 import android.widget.Toast;
 
 import com.aichathon.aickathon2018.com.aickathon.aickathon2018.model.ClothList;
@@ -57,6 +60,7 @@ public class UploadFragment extends android.app.Fragment {
     private String currentImagePath = null;
     private Button upload_button;
     private Button capture_button;
+    private ProgressBar progressBar;
 
     public UploadFragment() {
         // Required empty public constructor
@@ -69,7 +73,7 @@ public class UploadFragment extends android.app.Fragment {
 
         View view = inflater.inflate(R.layout.fragment_album, container, false);
         fileService = APIUtils.getFileService();
-
+        progressBar = view.findViewById(R.id.progressBar2);
         upload_button = (Button) view.findViewById(R.id.upload_button);
         upload_button.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -101,13 +105,17 @@ public class UploadFragment extends android.app.Fragment {
             e.printStackTrace();
         }
         ByteArrayOutputStream stream = new ByteArrayOutputStream();
-        bm.compress(Bitmap.CompressFormat.JPEG, 50, stream);
+        bm.compress(Bitmap.CompressFormat.JPEG,80, stream);
         String data = android.util.Base64.encodeToString(stream.toByteArray(),android.util.Base64.DEFAULT);
         Call<Person> call = fileService.newphoto(0,data);
+        progressBar.setVisibility(View.VISIBLE);
+        getActivity().getWindow().setFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE,
+                WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE);
         call.enqueue(new Callback<Person>() {
             @Override
             public void onResponse(Call<Person> call, Response<Person> response) {
-
+                progressBar.setVisibility(View.GONE);
+                getActivity().getWindow().clearFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE);
                 Log.i("success",response.code()+" "+response.message());
                 Toast.makeText(getActivity(), "Successfully Uploaded", Toast.LENGTH_SHORT).show();
                 refresh();
@@ -115,6 +123,8 @@ public class UploadFragment extends android.app.Fragment {
 
             @Override
             public void onFailure(Call<Person> call, Throwable t) {
+                progressBar.setVisibility(View.GONE);
+                getActivity().getWindow().clearFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE);
                 Log.i("failed",t.getMessage()+" "+t.getCause());
                 Toast.makeText(getActivity(), "Upload Failed", Toast.LENGTH_SHORT).show();
             }
@@ -125,10 +135,14 @@ public class UploadFragment extends android.app.Fragment {
 
     public void refresh(){
         Call<Person> call = fileService.getuser(0);
+        progressBar.setVisibility(View.VISIBLE);
+        getActivity().getWindow().setFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE,
+                WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE);
         call.enqueue(new Callback<Person>() {
             @Override
             public void onResponse(Call<Person> call, Response<Person> response) {
-
+                progressBar.setVisibility(View.GONE);
+                getActivity().getWindow().clearFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE);
                 Log.i("success",response.code()+" "+response.message());
                 Person person = response.body();
                 //returned param
@@ -149,6 +163,8 @@ public class UploadFragment extends android.app.Fragment {
 
             @Override
             public void onFailure(Call<Person> call, Throwable t) {
+                progressBar.setVisibility(View.GONE);
+                getActivity().getWindow().clearFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE);
                 Log.i("failed",t.getMessage()+" "+t.getCause());
                 Toast.makeText(getActivity(), "Error Occurred", Toast.LENGTH_SHORT).show();
             }

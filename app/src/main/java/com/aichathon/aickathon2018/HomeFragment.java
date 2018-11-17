@@ -1,17 +1,24 @@
 package com.aichathon.aickathon2018;
 
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.WindowManager;
+import android.widget.Button;
 import android.widget.ListView;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.aichathon.aickathon2018.com.aickathon.aickathon2018.model.ClothList;
+import com.aichathon.aickathon2018.com.aickathon.aickathon2018.model.ClothList_;
 import com.aichathon.aickathon2018.com.aickathon.aickathon2018.model.Color;
+import com.aichathon.aickathon2018.com.aickathon.aickathon2018.model.DataPasser;
 import com.aichathon.aickathon2018.com.aickathon.aickathon2018.model.Person;
 import com.aichathon.aickathon2018.com.aickathon.aickathon2018.model.Photo;
 import com.aichathon.aickathon2018.com.aickathon.aickathon2018.remote.APIUtils;
@@ -37,6 +44,7 @@ import retrofit2.Response;
  */
 public class HomeFragment extends android.app.Fragment {
     FileService fileService;
+    private ProgressBar progressBar;
 
     private TextView profile_name;
     private TextView your_colour;
@@ -53,6 +61,51 @@ public class HomeFragment extends android.app.Fragment {
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_home, container, false);
         fileService = APIUtils.getFileService();
+        progressBar = view.findViewById(R.id.progressBar3);
+        Button btn = view.findViewById(R.id.button);
+        btn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Call<ClothList_> call = fileService.suggestwithoutphoto(0);
+                progressBar.setVisibility(View.VISIBLE);
+                getActivity().getWindow().setFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE,
+                        WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE);
+                call.enqueue(new Callback<ClothList_>() {
+                    @Override
+                    public void onResponse(Call<ClothList_> call, Response<ClothList_> response) {
+                        Log.i("success",response.code()+" "+response.message());
+                        progressBar.setVisibility(View.GONE);
+                        getActivity().getWindow().clearFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE);
+                        ClothList_ cl = response.body();
+                        if (cl==null){
+                            Toast.makeText(getActivity(), "No Garment Detected", Toast.LENGTH_LONG).show();
+                        }else {
+                            List<ClothList> clothList = cl.getClothList();
+                            if (clothList != null) {
+                                if (!clothList.isEmpty()) {
+                                    Toast.makeText(getActivity(), "Load Successful", Toast.LENGTH_SHORT).show();
+                                    Intent i = new Intent(getActivity(), ResultPage.class);
+                                    DataPasser.setCl(clothList);
+                                    startActivity(i);
+                                } else {
+                                    Toast.makeText(getActivity(), "No Suggested Clothing", Toast.LENGTH_LONG).show();
+                                }
+                            } else {
+                                Toast.makeText(getActivity(), "Unknown Error", Toast.LENGTH_LONG).show();
+                            }
+                        }
+                    }
+
+                    @Override
+                    public void onFailure(Call<ClothList_> call, Throwable t) {
+                        progressBar.setVisibility(View.GONE);
+                        getActivity().getWindow().clearFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE);
+                        Log.i("failed",t.getMessage()+" "+t.getCause());
+                        Toast.makeText(getActivity(), "Failed!", Toast.LENGTH_SHORT).show();
+                    }
+                });
+            }
+        });
         refresh();
 //        try {
 //            InputStream inputStream = getActivity().getAssets().open("user1.json");
@@ -89,11 +142,16 @@ public class HomeFragment extends android.app.Fragment {
     }
     public void refresh(){
         Call<Person> call = fileService.getuser(0);
+        progressBar.setVisibility(View.VISIBLE);
+        getActivity().getWindow().setFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE,
+                WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE);
         call.enqueue(new Callback<Person>() {
             @Override
             public void onResponse(Call<Person> call, Response<Person> response) {
 
                 Log.i("success",response.code()+" "+response.message());
+                progressBar.setVisibility(View.GONE);
+                getActivity().getWindow().clearFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE);
                 Person person = response.body();
                 //returned param
                 TextView name = (TextView) getActivity().findViewById(R.id.profile_name);
@@ -119,6 +177,8 @@ public class HomeFragment extends android.app.Fragment {
 
             @Override
             public void onFailure(Call<Person> call, Throwable t) {
+                progressBar.setVisibility(View.GONE);
+                getActivity().getWindow().clearFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE);
                 Log.i("failed",t.getMessage()+" "+t.getCause());
                 Toast.makeText(getActivity(), "Error Occurred", Toast.LENGTH_SHORT).show();
             }
