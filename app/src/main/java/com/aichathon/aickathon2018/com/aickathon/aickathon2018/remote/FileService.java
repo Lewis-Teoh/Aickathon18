@@ -12,4 +12,7 @@ public interface FileService {
     @POST("newphoto")
     Call<Person> newphoto(@Field("user_id") int user_id, @Field("img_data") String img_data);
 
+    @FormUrlEncoded
+    @POST("getuser")
+    Call<Person> getuser(@Field("user_id") int user_id);
 }

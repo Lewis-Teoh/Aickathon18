@@ -35,7 +35,7 @@ public class SearchFragment extends android.app.Fragment {
         cameraVector.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Log.e("CLICK", "Clicked!");
+
             }
         });
         return view;

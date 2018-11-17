@@ -6,6 +6,28 @@ import com.google.gson.annotations.SerializedName;
 
 public class Person {
 
+    @SerializedName("photos")
+    @Expose
+    private List<Photo> photos = null;
+    @SerializedName("name")
+    @Expose
+    private String name = null;
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public List<Photo> getPhotos() {
+        return photos;
+    }
+
+    public void setPhotos(List<Photo> photos) {
+        this.photos = photos;
+    }
     @SerializedName("top_colors")
     @Expose
     private List<String> topColors = null;
