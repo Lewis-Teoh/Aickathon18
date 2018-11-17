@@ -36,12 +36,4 @@
         app:layout_constraintHorizontal_bias="0.54"
         app:layout_constraintStart_toStartOf="parent" />
 
-    <Button
-        android:id="@+id/ShowResult"
-        android:layout_width="179dp"
-        android:layout_height="125dp"
-        android:text="Show result"
-        tools:layout_editor_absoluteX="95dp"
-        tools:layout_editor_absoluteY="314dp" />
-
 </android.support.constraint.ConstraintLayout>

@@ -20,8 +20,10 @@ import android.widget.Toast;
 import com.aichathon.aickathon2018.com.aichathon.aickathon2018.remote.APIUtils;
 import com.aichathon.aickathon2018.com.aichathon.aickathon2018.remote.FileService;
 import com.aichathon.aickathon2018.com.aichathon.aickathon2018.model.Person;
+import com.aichathon.aickathon2018.com.aichathon.aickathon2018.model.ClothList;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 
 import retrofit2.Call;
@@ -47,9 +49,6 @@ public class UploadFragment extends android.app.Fragment {
     public UploadFragment() {
         // Required empty public constructor
     }
-
-
-
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -93,6 +92,11 @@ public class UploadFragment extends android.app.Fragment {
                         Person person = response.body();
                         List<String> colorList =person.getTopColors();
                         List<String> styleList =person.getTopStyles();
+                        List<ClothList> cloth_list = person.getClothList();
+
+
+
+
 
 
                         Toast.makeText(getActivity(), "in response", Toast.LENGTH_SHORT).show();
@@ -108,9 +112,6 @@ public class UploadFragment extends android.app.Fragment {
         });
 
 
-
-
-        // Inflate the layout for this fragment
         return view;
     }
 

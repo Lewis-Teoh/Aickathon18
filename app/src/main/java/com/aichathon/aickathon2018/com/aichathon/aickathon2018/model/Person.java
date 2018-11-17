@@ -6,6 +6,16 @@ import com.google.gson.annotations.SerializedName;
 
 public class Person {
 
+    @Expose
+    private List<ClothList> clothList = null;
+
+    public List<ClothList> getClothList() {
+        return clothList;
+    }
+
+    public void setClothList(List<ClothList> clothList) {
+        this.clothList = clothList;
+    }
     @SerializedName("top_colors")
     @Expose
     private List<String> topColors = null;
