@@ -38,7 +38,9 @@ public class SearchFragment extends android.app.Fragment {
                 Log.e("CLICK", "Clicked!");
             }
         });
-        return inflater.inflate(R.layout.fragment_search, container, false);
+
+        return view;
+
     }
 
 
