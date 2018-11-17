@@ -1,6 +1,6 @@
 package com.aichathon.aickathon2018.com.aichathon.aickathon2018.remote;
 
-import com.aichathon.aickathon2018.com.aichathon.aickathon2018.model.FileInfo;
+import com.aichathon.aickathon2018.com.aichathon.aickathon2018.model.Person;
 
 import java.io.File;
 
@@ -18,7 +18,7 @@ import retrofit2.http.Query;
 public interface FileService {
     @FormUrlEncoded
     @POST("newphoto")
-    Call<FileInfo> newphoto(@Field("user_id") int user_id, @Field("img_data") String img_data);
+    Call<Person> newphoto(@Field("user_id") int user_id, @Field("img_data") String img_data);
 
 }
 

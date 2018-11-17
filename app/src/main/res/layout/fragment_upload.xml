@@ -18,10 +18,10 @@
         android:text="ChooseFile"
         app:layout_constraintBottom_toTopOf="@+id/btnUpload"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.568"
+        app:layout_constraintHorizontal_bias="0.519"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.718" />
+        app:layout_constraintVertical_bias="1.0" />
 
     <Button
         android:id="@+id/btnUpload"
@@ -29,11 +29,19 @@
         android:layout_height="117dp"
         android:layout_marginStart="8dp"
         android:layout_marginEnd="8dp"
-        android:layout_marginBottom="224dp"
+        android:layout_marginBottom="276dp"
         android:text="Upload"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.596"
+        app:layout_constraintHorizontal_bias="0.54"
         app:layout_constraintStart_toStartOf="parent" />
+
+    <Button
+        android:id="@+id/ShowResult"
+        android:layout_width="179dp"
+        android:layout_height="125dp"
+        android:text="Show result"
+        tools:layout_editor_absoluteX="95dp"
+        tools:layout_editor_absoluteY="314dp" />
 
 </android.support.constraint.ConstraintLayout>

@@ -1,11 +1,9 @@
 package com.aichathon.aickathon2018;
 
 
-import android.content.CursorLoader;
 import android.content.Intent;
 import android.database.Cursor;
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
@@ -21,23 +19,14 @@ import android.widget.Toast;
 
 import com.aichathon.aickathon2018.com.aichathon.aickathon2018.remote.APIUtils;
 import com.aichathon.aickathon2018.com.aichathon.aickathon2018.remote.FileService;
-import com.aichathon.aickathon2018.com.aichathon.aickathon2018.model.FileInfo;
-import com.squareup.okhttp.MultipartBuilder;
-
+import com.aichathon.aickathon2018.com.aichathon.aickathon2018.model.Person;
 import java.io.ByteArrayOutputStream;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.util.Base64;
-import java.io.File;
+import java.util.List;
 
-import okhttp3.MediaType;
-import okhttp3.MultipartBody;
-import okhttp3.RequestBody;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
-import retrofit2.http.POST;
 
 
 import static android.app.Activity.RESULT_OK;
@@ -50,6 +39,7 @@ public class UploadFragment extends android.app.Fragment {
     FileService fileService;
     Button btnChooseFile;
     Button btnUpload;
+    Button btnShowResult;
     String imagePath;
     Uri imageUri;
 
@@ -80,6 +70,7 @@ public class UploadFragment extends android.app.Fragment {
             }
         });
 
+
         btnUpload.setOnClickListener(new View.OnClickListener(){
             @RequiresApi(api = Build.VERSION_CODES.O)
             @Override
@@ -93,22 +84,32 @@ public class UploadFragment extends android.app.Fragment {
                 ByteArrayOutputStream stream = new ByteArrayOutputStream();
                 bm.compress(Bitmap.CompressFormat.JPEG, 50, stream);
                 String data = android.util.Base64.encodeToString(stream.toByteArray(),android.util.Base64.DEFAULT);
-                Call<FileInfo> call = fileService.newphoto(0,data);
-                call.enqueue(new Callback<FileInfo>() {
+                Call<Person> call = fileService.newphoto(0,data);
+                call.enqueue(new Callback<Person>() {
                     @Override
-                    public void onResponse(Call<FileInfo> call, Response<FileInfo> response) {
+                    public void onResponse(Call<Person> call, Response<Person> response) {
+
                         Log.i("success",response.code()+" "+response.message());
+                        Person person = response.body();
+                        List<String> colorList =person.getTopColors();
+                        List<String> styleList =person.getTopStyles();
+
+
                         Toast.makeText(getActivity(), "in response", Toast.LENGTH_SHORT).show();
 
                     }
 
                     @Override
-                    public void onFailure(Call<FileInfo> call, Throwable t) {
+                    public void onFailure(Call<Person> call, Throwable t) {
                         Log.i("failed",t.getMessage()+" "+t.getCause());
                     }
                 });
             }
         });
+
+
+
+
         // Inflate the layout for this fragment
         return view;
     }
