@@ -24,7 +24,7 @@ public class Dashboard extends AppCompatActivity {
                     FragmentManager manager1 = getFragmentManager();
                     manager1.beginTransaction().replace(R.id.contentLayout, homeFragment, homeFragment.getTag()).commit();
                     return true;
-                case R.id.navigation_upload:
+                case R.id.navigation_album:
                     UploadFragment uploadFragment = new UploadFragment();
                     FragmentManager manager2 = getFragmentManager();
                     manager2.beginTransaction().replace(R.id.contentLayout, uploadFragment, uploadFragment.getTag()).commit();
@@ -46,6 +46,9 @@ public class Dashboard extends AppCompatActivity {
 
         BottomNavigationView navigation = (BottomNavigationView) findViewById(R.id.navigation);
         navigation.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener);
+        if (savedInstanceState == null) {
+            navigation.setSelectedItemId(R.id.navigation_home);
+        }
     }
 
 }
